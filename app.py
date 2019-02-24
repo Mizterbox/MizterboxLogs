@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
-from time import gmtime, strftime, localtime
-
+import pytz
+from pytz import timezone
 
 app = Flask(__name__)
 
@@ -11,14 +11,18 @@ def hello():
 
 @app.route("/sprinklerlogs/",methods=['GET','POST'])
 def sprinklerlogs():
+    # register the time as soon as the route was hit
+    date_format='%m/%d/%Y %H:%M:%S %Z'
+    date = datetime.now(tz=pytz.utc)
+    date = date.astimezone(timezone('US/Pacific'))
 
     content = request.get_json()
     sprinklerid = content['id']
     status = content['status']
-    timestamp = strftime("%Y-%m-%d %H:%M:%S", localtime())
+
     return jsonify(sprinklerid=sprinklerid,
     status=status,
-    timestamp = timestamp)
+    timestamp=date)
 
 
 if __name__ == '__main__':
