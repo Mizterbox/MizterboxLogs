@@ -15,7 +15,7 @@ def sprinklerlogs():
     # register the time as soon as the route was hit
     date_format='%m/%d/%Y %H:%M:%S %Z'
     date = datetime.now(tz=pytz.utc)
-    date = date.astimezone(timezone('US/Pacific'))
+    date = date.astimezone(timezone('America/Los_Angeles'))
 
     content = request.get_json()
     sprinklerid = content['id']
