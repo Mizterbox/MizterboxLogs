@@ -9,7 +9,7 @@ actualsprinkids = [1,2,3,4,5]
 status = ['Running Active', 'Restarting','Connecting to Wifi', 'Connecting to Internet']
 
 while True:
-    res = requests.post('http://localhost:5000/sprinklerlogs/', json={
+    res = requests.post('https://mizterboxlogs.herokuapp.com/sprinklerlogs/', json={
     "id":int(np.random.choice(sprinklerid,size=1)[0])%len(actualsprinkids),
     "status":np.random.choice(status,size=1)[0],
     })
