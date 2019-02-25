@@ -3,6 +3,18 @@ from datetime import datetime
 import pytz
 from pytz import timezone
 
+
+def capture_timestamp():
+    """
+    Captures the current timestamp in PST
+    """
+    date_format='%Y-%m-%d %H:%M:%S%z'
+    pacific_tz = timezone('US/Pacific')
+    timestamp = datetime.now(pacific_tz).strftime(date_format)
+    return timestamp
+
+
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -13,10 +25,7 @@ def hello():
 @app.route("/sprinklerlogs/",methods=['GET','POST'])
 def sprinklerlogs():
     # register the time as soon as the route was hit
-    date_format='%m/%d/%Y %H:%M:%S %Z'
-    date = datetime.now(tz=pytz.utc)
-    date = date.astimezone(timezone('America/Los_Angeles'))
-
+    date = capture_timestamp()
     content = request.get_json()
     sprinklerid = content['id']
     status = content['status']
