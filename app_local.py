@@ -16,7 +16,16 @@ def capture_timestamp():
 
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://logs:mizterbox@localhost:3306/mizterboxlogs'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://logs:mizterbox@localhost:3306/mizterboxlogs'
+
+
+db = SQLAlchemy(app):
+
+class SprinklerLogs(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    sprinklerid = db.Column(db.Integer)
+    status = db.Column(db.String(30))
+    timestamp = db.Column(db.)
 
 
 @app.route("/")
