@@ -34,16 +34,3 @@ def sprinklerlogs():
     return jsonify(sprinklerid=sprinklerid,
     status=status,
     timestamp=date)
-
-
-@app.route("/registersprinkler/",methods=['GET','POST'])
-def registersprinkler():
-    """
-    Add a sprinkerler to the database so that the ids can be checked against.
-    """
-    request.method == 'GET':
-        return render_template('registersprinkler.html')
-
-
-    if request.method == 'POST'
-        
