@@ -49,44 +49,53 @@ def sprinklerlogs():
 @app.route("/checkdowns/",methods=['GET'])
 def checkdowns():
     """
-    ----------------------------------------------------------------------
-    Checks to see if any esp8266 devices are down.
-
-    Strategy: Check every registered device and see if time difference between now
-    and last log exceeds PERMITTED_TIME_BETWEEN_CHECKS.
-    ----------------------------------------------------------------------
+    If needed, this can be turned into an infinite loop.
     """
-
     registered_devices = [1,2,4,0]
-    down_ids = []
 
-    def scanfordowns():
-        # this defines the new log windows as time uopdates
-        while True:
-            # from now, pull up all the records in the last hour.
-            last_hour_records = MizterboxLogs.query.filter(MizterboxLogs.timestamp>datetime.now()-timedelta(hours=0,minutes=60))
+    def scanfordowns(registered_devices):
+        """
+        ----------------------------------------------------------------------
+        Checks to see if any esp8266 devices are down.
 
-            # iterate through the available registered devices.
-            for registered_device in registered_devices:
+        Strategy: Check every registered device and see if time difference between
+        now and last log exceeds PERMITTED_TIME_BETWEEN_CHECKS.
+        ----------------------------------------------------------------------
+        """
+        down_ids = []
 
-                # get the most recent log of the registered_device -> latest log is obtained by picking the last element of the list.
-                latest_log = list(MizterboxLogs.query.filter(MizterboxLogs.sprinklerid==registered_device))[-1]
 
-                # if the time difference b/w now and the latest timestamp of the log exceeds 45 minutes (PERMITTED_TIME_BETWEEN_CHECKS)
-                # then the system-esp8266 is down.
-                current_time = datetime.now()
-                if current_time - latest_log.timestamp > PERMITTED_TIME_BETWEEN_CHECKS:
-                    # add only if the esp8266 isn't present
-                    if registered_device not in down_ids:
-                        down_ids.append(registered_device)
+        # from now, pull up all the records in the last hour.
+        last_hour_records = MizterboxLogs.query.filter(MizterboxLogs.timestamp>datetime.now()-timedelta(hours=0,minutes=60))
 
-                # if the esp8266 came back up then remove the registered_device from the down list.
-                if registered_device in down_ids:
-                    if current_time - latest_log.timestamp < PERMITTED_TIME_BETWEEN_CHECKS:
-                        down_ids.remove(registered_device)
+        # iterate through the available registered devices.
+        for registered_device in registered_devices:
 
-                # delay for sometime
-                time.sleep(2)
-                print(down_ids)
+            # get the most recent log of the registered_device -> latest log is obtained by picking the last element of the list.
+            latest_log = list(MizterboxLogs.query.filter(MizterboxLogs.sprinklerid==registered_device))[-1]
 
-    scanfordowns()
+            # if the time difference b/w now and the latest timestamp of the log exceeds 45 minutes (PERMITTED_TIME_BETWEEN_CHECKS)
+            # then the system-esp8266 is down.
+            current_time = datetime.now()
+            if current_time - latest_log.timestamp > PERMITTED_TIME_BETWEEN_CHECKS:
+                # add only if the esp8266 isn't present
+                if registered_device not in down_ids:
+                    down_ids.append(registered_device)
+
+            # if the esp8266 came back up then remove the registered_device from the down list.
+            if registered_device in down_ids:
+                if current_time - latest_log.timestamp < PERMITTED_TIME_BETWEEN_CHECKS:
+                    down_ids.remove(registered_device)
+
+            print(down_ids)
+        return down_ids
+
+    # this is where if need be, the execution can be turned infinitely.
+    downs = scanfordowns(registered_devices)
+
+    # basic analytics for now
+    down_count = len(downs)
+    registered_count = len(registered_devices)
+    active_count = registered_count-down_count
+
+    return render_template('checkdowns.html', registered_count = registered_count, active_count = active_count, size = len(downs), current_time = capture_timestamp().strftime('%Y-%m-%d %H:%M:%S'), down_esps = downs)
