@@ -7,7 +7,7 @@ status = np.random.randint(1000,size=100)
 maxcount = 5000000
 counter = 0
 
-actualsprinkids = [1]
+actualsprinkids = [1,2,4,0]
 status = ['Running Active', 'Restarting','Connecting to Wifi', 'Connecting to Internet']
 
 while counter < maxcount:

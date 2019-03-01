@@ -98,4 +98,4 @@ def checkdowns():
     registered_count = len(registered_devices)
     active_count = registered_count-down_count
 
-    return render_template('checkdowns.html', registered_count = registered_count, active_count = active_count, size = len(downs), current_time = capture_timestamp().strftime('%Y-%m-%d %H:%M:%S'), down_esps = downs)
+    return render_template('checkdowns.html', registered_count = registered_count, active_count = active_count, size = len(downs), current_time = capture_timestamp().strftime('%m-%d-%Y %H:%M:%S'), down_esps = downs)
