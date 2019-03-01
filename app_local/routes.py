@@ -60,30 +60,33 @@ def checkdowns():
     registered_devices = [1,2,4,0]
     down_ids = []
 
-    # this defines the new log windows as time uopdates
-    while True:
-        # from now, pull up all the records in the last hour.
-        last_hour_records = MizterboxLogs.query.filter(MizterboxLogs.timestamp>datetime.now()-timedelta(hours=0,minutes=60))
+    def scanfordowns():
+        # this defines the new log windows as time uopdates
+        while True:
+            # from now, pull up all the records in the last hour.
+            last_hour_records = MizterboxLogs.query.filter(MizterboxLogs.timestamp>datetime.now()-timedelta(hours=0,minutes=60))
 
-        # iterate through the available registered devices.
-        for registered_device in registered_devices:
+            # iterate through the available registered devices.
+            for registered_device in registered_devices:
 
-            # get the most recent log of the registered_device -> latest log is obtained by picking the last element of the list.
-            latest_log = list(MizterboxLogs.query.filter(MizterboxLogs.sprinklerid==registered_device))[-1]
+                # get the most recent log of the registered_device -> latest log is obtained by picking the last element of the list.
+                latest_log = list(MizterboxLogs.query.filter(MizterboxLogs.sprinklerid==registered_device))[-1]
 
-            # if the time difference b/w now and the latest timestamp of the log exceeds 45 minutes (PERMITTED_TIME_BETWEEN_CHECKS)
-            # then the system-esp8266 is down.
-            current_time = datetime.now()
-            if current_time - latest_log.timestamp > PERMITTED_TIME_BETWEEN_CHECKS:
-                # add only if the esp8266 isn't present
-                if registered_device not in down_ids:
-                    down_ids.append(registered_device)
+                # if the time difference b/w now and the latest timestamp of the log exceeds 45 minutes (PERMITTED_TIME_BETWEEN_CHECKS)
+                # then the system-esp8266 is down.
+                current_time = datetime.now()
+                if current_time - latest_log.timestamp > PERMITTED_TIME_BETWEEN_CHECKS:
+                    # add only if the esp8266 isn't present
+                    if registered_device not in down_ids:
+                        down_ids.append(registered_device)
 
-            # if the esp8266 came back up then remove the registered_device from the down list.
-            if registered_device in down_ids:
-                if current_time - latest_log.timestamp < PERMITTED_TIME_BETWEEN_CHECKS:
-                    down_ids.remove(registered_device)
+                # if the esp8266 came back up then remove the registered_device from the down list.
+                if registered_device in down_ids:
+                    if current_time - latest_log.timestamp < PERMITTED_TIME_BETWEEN_CHECKS:
+                        down_ids.remove(registered_device)
 
-            # delay for sometime
-            time.sleep(2)
-            print(down_ids)
+                # delay for sometime
+                time.sleep(2)
+                print(down_ids)
+
+    scanfordowns()
