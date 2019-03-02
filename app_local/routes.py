@@ -51,7 +51,7 @@ def checkdowns():
     """
     If needed, this can be turned into an infinite loop.
     """
-    registered_devices = [1,2,4,0]
+    registered_devices = [1,2,4,0,3]
 
     def scanfordowns(registered_devices):
         """
