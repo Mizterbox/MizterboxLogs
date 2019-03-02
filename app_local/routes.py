@@ -65,15 +65,16 @@ def checkdowns():
         down_ids = []
 
 
-        # from now, pull up all the records in the last hour.
+        # from now(), pull up all the records in the last hour.
         last_hour_records = MizterboxLogs.query.filter(MizterboxLogs.timestamp>datetime.now()-timedelta(hours=0,minutes=60))
 
         # iterate through the available registered devices.
         for registered_device in registered_devices:
-
-            # get the most recent log of the registered_device -> latest log is obtained by picking the last element of the list.
-            latest_log = list(MizterboxLogs.query.filter(MizterboxLogs.sprinklerid==registered_device))[-1]
-
+            try:
+                # get the most recent log of the registered_device -> latest log is obtained by picking the last element of the list.
+                latest_log = list(MizterboxLogs.query.filter(MizterboxLogs.sprinklerid==registered_device))[-1]
+            except:
+                return "No logs yet!"    
             # if the time difference b/w now and the latest timestamp of the log exceeds 45 minutes (PERMITTED_TIME_BETWEEN_CHECKS)
             # then the system-esp8266 is down.
             current_time = datetime.now()
