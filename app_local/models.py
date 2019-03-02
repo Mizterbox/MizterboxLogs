@@ -8,7 +8,7 @@ class MizterboxLogs(db.Model):
     """
 
     id = db.Column(db.Integer,primary_key=True)
-    sprinklerid = db.Column(db.Integer,nullable=False,unique=True)
+    sprinklerid = db.Column(db.Integer,nullable=False)
     status = db.Column(db.String(30),nullable=False)
     timestamp = db.Column(db.DateTime,nullable=False,default=capture_timestamp())
 
