@@ -5,9 +5,9 @@ from pytz import timezone
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/postgresql-infinite-38158'
 db = SQLAlchemy(app)
-db.create_all()
+
 
 
 from app_local.models import MizterboxLogs
