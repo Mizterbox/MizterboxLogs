@@ -21,7 +21,7 @@ class Sprinker(db.Model):
     Generate a sprinkler id from a setup.
     """
     id = db.Column(db.Integer,primary_key=True)
-    sprinklerid = db.Column(db.Integer,nullable=False)
+    sprinklerid = db.Column(db.Integer,nullable=False,unique=True)
     address = db.Column(db.String(80),nullable=False)
     timestamp = db.Column(db.DateTime,nullable=False,default=capture_timestamp())
 
