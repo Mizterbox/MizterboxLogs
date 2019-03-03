@@ -95,7 +95,6 @@ def checkdowns():
             if registered_device in down_ids:
                 if current_time - latest_log.timestamp < PERMITTED_TIME_BETWEEN_CHECKS:
                     down_ids.remove(registered_device)
-
         return sorted(down_ids)
 
     # this is where if need be, the execution can be turned infinitely.
@@ -106,4 +105,4 @@ def checkdowns():
     registered_count = len(registered_devices)
     active_count = registered_count-down_count
 
-    return render_template('checkdowns.html', registered_count = registered_count, active_count = active_count, size = len(downs), current_time = capture_timestamp().strftime('%m-%d-%Y %H:%M:%S'), down_esps = downs)
+    return render_template('checkdowns.html', registered_count = registered_count, active_count = active_count, size = len(downs), current_time = capture_timestamp().strftime('%m-%d-%Y %H:%M:%S %Z'), down_esps = downs)
