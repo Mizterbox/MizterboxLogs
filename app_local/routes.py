@@ -77,7 +77,7 @@ def checkdowns():
             # if there are no logs in the previous look window for that sprinklerid
             if len(latest_log) <= 0:
                 # regard that id as down and skip processing further
-                down_ids.append(registered_device)
+                down_ids.append((registered_device,"Never"))
                 continue
             else:
                 # latest log is obtained by picking the last element of the list.
@@ -89,7 +89,7 @@ def checkdowns():
             if current_time - latest_log.timestamp > PERMITTED_TIME_BETWEEN_CHECKS:
                 # add only if the esp8266 isn't present
                 if registered_device not in down_ids:
-                    down_ids.append(registered_device)
+                    down_ids.append((registered_device,latest_log.timestamp.strftime('%Y-%m-%d %H:%M:%S %Z')))
 
             # if the esp8266 came back up then remove the registered_device from the down list.
             if registered_device in down_ids:

@@ -40,6 +40,7 @@
     <th>
         <tr style="color: green; ">
         <td>ESP8266 ID - Down Devices</td>
+        <td>Last Active</td>
 </tr>
    </th>
 
@@ -48,8 +49,8 @@
 
 <!-- table rows -->
 <tr>
-    <td>{{down_esps[i]}}</td>
-
+    <td>{{down_esps[i][0]}}</td>
+    <td>{{down_esps[i][1]}}</td>
 {%endfor%}
 
 </tr>
